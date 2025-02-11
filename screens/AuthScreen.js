@@ -4,23 +4,39 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Alert
 } from "react-native";
+import { mockUserDB } from '../mockUserDB'; // <-- Import the mock DB
 
 export default function AuthScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
 
-    // Placeholder function
+    // Placeholder function, Navigate to the SignUp Screen
     const handleSignUp = () => {
-        console.log("Sign up with", email, password);
+        navigation.navigate("SignUp");
         // TODO: Integrate sigh-up with logic (Firebase, custom backend, etc.)
     };
 
+    // Check if the user exists; if yes, navigate to Home; otherwise show warning
     const handleLogin = () => {
-        ("Login with:", email, password);
         // TODO: Integrate logic
+        const userFound = mockUserDB.find(
+            (user) => user.email === email && user.password === password
+        );
+
+        if (userFound) {
+            // Success: Navigate to Home
+            navigation.navigate("Home");
+        } else {
+            // User doesn't exists or password mismatch
+            Alert.alert(
+                "Login Failed",
+                "User not found or invalid credentials. Please try again."
+            );
+        }
     };
 
     const handleGoogleLogin = () => {
@@ -61,7 +77,8 @@ export default function AuthScreen({ navigation }) {
             <Text style={styles.buttonText}>Log In</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+        {/* Log In with Google Button (mocked for now) */}
+        <TouchableOpacity style={styles.googleButton} onPress={() => Alert.alert('Google', 'Not yet implemented.')}>
             <Text style={styles.googleButtonText}>Log In with Google</Text>
         </TouchableOpacity>
     </View>

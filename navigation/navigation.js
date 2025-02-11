@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 // Import your screens
 import AuthScreen from "../screens/AuthScreen";
+import SignUpScreen from "../screens/SignUpScreen";
+import HomeScreen from "../screens/HomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -18,16 +20,16 @@ export default function Navigation() {
                 component={AuthScreen}
                 options={{ headerShown: false}}
             />
-            {
-                /*
-                Add more screen here, for example
-                <Stack.Screen
-                    name="Home"
-                    component={HomeScreen}
-                    options={{ title: Home}}
-                />
-                */
-            }
+            <Stack.Screen
+                name="SignUp"
+                component={SignUpScreen}
+                options={{ title: "Sign Up"}}
+            />
+            <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{ title: "Home"}}
+            />
         </Stack.Navigator>
     );
 }
