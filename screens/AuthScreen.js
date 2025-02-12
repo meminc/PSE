@@ -29,7 +29,7 @@ export default function AuthScreen({ navigation }) {
 
         if (userFound) {
             // Success: Navigate to Home
-            navigation.navigate("Home");
+            navigation.navigate("HomeTabs");
         } else {
             // User doesn't exists or password mismatch
             Alert.alert(

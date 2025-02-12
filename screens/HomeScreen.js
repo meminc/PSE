@@ -6,6 +6,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
         <Text style={styles.text}>Welcome Home!</Text>
+        <Text>This is one of the tabs in your bottom navigation.</Text>
     </View>
   );
 }
@@ -17,6 +18,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
-        fontSize: 24
+        fontSize: 24,
+        marginBottom: 12
     }
 });
