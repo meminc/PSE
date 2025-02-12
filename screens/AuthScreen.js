@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    Alert
-} from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Text, TextInput, Button, Snackbar } from "react-native-paper";
 import { mockUserDB } from '../mockUserDB'; // <-- Import the mock DB
 
 export default function AuthScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
 
 
     // Placeholder function, Navigate to the SignUp Screen
-    const handleSignUp = () => {
+    const handleSignUpNavigate = () => {
         navigation.navigate("SignUp");
         // TODO: Integrate sigh-up with logic (Firebase, custom backend, etc.)
     };
@@ -29,13 +24,16 @@ export default function AuthScreen({ navigation }) {
 
         if (userFound) {
             // Success: Navigate to Home
-            navigation.navigate("HomeTabs");
+            navigation.navigate("Home");
         } else {
             // User doesn't exists or password mismatch
+            /*
             Alert.alert(
                 "Login Failed",
                 "User not found or invalid credentials. Please try again."
             );
+            */
+            setErrorMsg('User not found or invalid credentials');
         }
     };
 
@@ -45,43 +43,58 @@ export default function AuthScreen({ navigation }) {
     };
 
     return (
-    <View style={styles.container}>
-        <Text style={styles.title}>Welcome to PSE</Text>
-        <Text style={styles.subtitle}>Power System Engineering</Text>
+        <View style={styles.container}>
+            <Text variant="headlineMedium" style={styles.title}>
+                Welcome to PSE
+            </Text>
+            <Text variant="bodyMedium" style={styles.subtitle}>
+                Power System Engineering
+            </Text>
 
-        <TextInput
-            style={styles.input}
-            placeholder="Email"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-        />
+            <TextInput
+                mode="outlined"
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={styles.input}
+            />
 
-        <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-            value={password}
-            onChangeText={setPassword}
-        />
+            <TextInput
+                mode="outlined"
+                label="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                style={styles.input}
+            />
 
-        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
+            <Button
+                mode="contained"
+                onPress={handleLogin}
+                style={styles.button}
+            >
+                Log In
+            </Button>
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Log In</Text>
-        </TouchableOpacity>
+            <Button
+                mode="outlined"
+                onPress={handleSignUpNavigate}
+                style={styles.button}
+            >
+                Sign Up
+            </Button>
 
-        {/* Log In with Google Button (mocked for now) */}
-        <TouchableOpacity style={styles.googleButton} onPress={() => Alert.alert('Google', 'Not yet implemented.')}>
-            <Text style={styles.googleButtonText}>Log In with Google</Text>
-        </TouchableOpacity>
-    </View>
+            <Snackbar
+                visible={!!errorMsg}
+                onDismiss={() => setErrorMsg('')}
+                duration={2000}
+            >
+                {errorMsg}
+            </Snackbar>
+        </View>
     );
 }
 
@@ -93,45 +106,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     title: {
-        fontSize: 28,
-        fontWeight: 'bold',
         marginBottom: 6,
     },
     subtitle: {
-        fontSize: 16,
-        marginBottom: 40,
-        color: 'gray',
+        marginBottom: 30,
     },
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 6,
-        padding: 12,
-        fontSize: 16,
         marginBottom: 12,
     },
     button: {
-        backgroundColor: '#007AFF',
-        padding: 16,
-        borderRadius: 6,
         marginBottom: 12,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    googleButton: {
-        borderColor: '#db4a39',
-        borderWidth: 1,
-        padding: 16,
-        borderRadius: 6,
-        alignItems: 'center',
-    },
-    googleButtonText: {
-        color: '#db4a39',
-        fontSize: 16,
-        fontWeight: '600',
     },
 });

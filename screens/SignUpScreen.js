@@ -1,17 +1,27 @@
-import React, { useState } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    Alert
-} from "react-native";
+import React, { use, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { Text, TextInput, Button, Snackbar } from "react-native-paper";
 import { mockUserDB } from "../mockUserDB";
 
 export default function SignUpScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
+
+    const handleSignUp = () => {
+        // Check if user already exists
+        const existingUser = mockUserDB.find((user) => user.email === email);
+
+        if (existingUser) {
+            setErrorMsg('User already exists!');
+            return;
+        }
+        
+        // Otherwise, create user in mock DB
+        mockUserDB.push({ email, password });
+        setSuccessMsg('Account created! You can log in now.');
+    }
 
     const handleCreateAccount = () => {
         // Check if user already exists
@@ -34,44 +44,66 @@ export default function SignUpScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Create an Account</Text>
+            <Text variant="headlineSmall" style={styles.title}>
+                Create an Account
+            </Text>
 
             {/* Email Input */}
             <TextInput
-                style={styles.input}
-                placeholder="Email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
+                mode="outlined"
+                label="Email"
                 value={email}
                 onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={styles.input}
             />
 
             {/* Password Input */}
             <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry
-                autoCapitalize="none"
-                autoCorrect={false}
+                mode="outlined"
+                label="Password"
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                style={styles.input}
             />
 
-            {/* Create Account Button */}
-            <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+            <Button
+                mode="contained"
+                onPress={handleSignUp}
+                style={styles.button}
+            >
+                Sign Up
+            </Button>
 
-            {/* Go Back Button (Optional) */}
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <Text style={styles.backButtonText}>Back to Login</Text>
-            </TouchableOpacity>
+            <Button
+                mode="outlined"
+                onPress={() => navigation.goBack()}
+                style={styles.button}
+            >
+                Back to Log In
+            </Button>
+
+            <Snackbar
+                visible={!!errorMsg}
+                onDismiss={() => setErrorMsg('')}
+                duration={2000}
+            >
+                {errorMsg}
+            </Snackbar>
+            <Snackbar
+                visible={!!successMsg}
+                onDismiss={() => setSuccessMsg('')}
+                duration={2000}
+            >
+                {successMsg}
+            </Snackbar>
         </View>
       );
 }
     
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -80,40 +112,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 40,
+        marginBottom: 30,
+        textAlign: 'center',
     },
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 6,
-        padding: 12,
-        fontSize: 16,
         marginBottom: 12,
     },
     button: {
-        backgroundColor: '#007AFF',
-        padding: 16,
-        borderRadius: 6,
         marginBottom: 12,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    backButton: {
-        borderColor: '#aaa',
-        borderWidth: 1,
-        padding: 16,
-        borderRadius: 6,
-        alignItems: 'center',
-    },
-    backButtonText: {
-        color: '#333',
-        fontSize: 16,
-        fontWeight: '600',
     },
 });
+
